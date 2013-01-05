@@ -85,6 +85,13 @@ i2timestamp(N) ->
 i2timestamp2(D, T) ->
     {j2date(D), i2time(T)}.
 
+timestamp2i(T) when is_binary(T) ->
+    <<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary, " ",
+      Hour:2/binary, ":", Minute:2/binary, ":", Second:2/binary>> = T,
+    timestamp2i({
+        {list_to_integer(binary_to_list(Year)), list_to_integer(binary_to_list(Month)), list_to_integer(binary_to_list(Day))},
+        {list_to_integer(binary_to_list(Hour)), list_to_integer(binary_to_list(Minute)), list_to_integer(binary_to_list(Second))}
+    });
 timestamp2i({Date, Time}) ->
     D = date2j(Date) - ?postgres_epoc_jdate,
     D * ?usecs_per_day + time2i(Time).
