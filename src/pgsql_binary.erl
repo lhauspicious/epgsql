@@ -11,6 +11,8 @@ encode(_Any, null)                          -> <<-1:?int32>>;
 encode(bool, true)                          -> <<1:?int32, 1:1/big-signed-unit:8>>;
 encode(bool, false)                         -> <<1:?int32, 0:1/big-signed-unit:8>>;
 encode(int2, N)                             -> <<2:?int32, N:1/big-signed-unit:16>>;
+encode(int4, N) when is_list(N)             -> encode(int4, list_to_integer(N));
+encode(int4, N) when is_binary(N)           -> encode(int4, list_to_integer(binary_to_list(N)));
 encode(int4, N)                             -> <<4:?int32, N:1/big-signed-unit:32>>;
 encode(int8, N)                             -> <<8:?int32, N:1/big-signed-unit:64>>;
 encode(float4, N)                           -> <<4:?int32, N:1/big-float-unit:32>>;
