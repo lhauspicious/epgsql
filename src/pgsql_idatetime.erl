@@ -86,8 +86,13 @@ i2timestamp2(D, T) ->
     {j2date(D), i2time(T)}.
 
 timestamp2i(T) when is_binary(T) ->
-    <<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary, " ",
-      Hour:2/binary, ":", Minute:2/binary, ":", Second:2/binary>> = T,
+    Time = case size(T) of
+        16 ->
+            <<T/binary, ":00">>;
+        19 ->
+            T
+    end,
+    <<Year:4/binary, "-", Month:2/binary, "-", Day:2/binary, " ",Hour:2/binary, ":", Minute:2/binary, ":", Second:2/binary>> = Time,
     timestamp2i({
         {list_to_integer(binary_to_list(Year)), list_to_integer(binary_to_list(Month)), list_to_integer(binary_to_list(Day))},
         {list_to_integer(binary_to_list(Hour)), list_to_integer(binary_to_list(Minute)), list_to_integer(binary_to_list(Second))}
